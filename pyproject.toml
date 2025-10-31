@@ -1,0 +1,21 @@
+[project]
+name = "pydantic-ai-learn"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "logfire>=4.14.2",
+    "pydantic-ai>=1.7.0",
+    "pydantic-evals[logfire]>=1.7.0",
+    "rich>=14.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.1.0",
+    "mypy>=1.18.2",
+    "pandas>=2.3.3",
+    "python-dotenv>=1.2.1",
+    "ruff>=0.14.2",
+]
