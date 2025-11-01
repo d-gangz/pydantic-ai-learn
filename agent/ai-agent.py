@@ -11,7 +11,10 @@ Side effects: Executes bash commands, reads/writes files
 import subprocess
 from pathlib import Path
 
+from dotenv import load_dotenv
 from pydantic_ai import Agent
+
+load_dotenv()
 
 
 def run_bash_command(command: str) -> str:
