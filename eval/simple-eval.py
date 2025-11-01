@@ -45,7 +45,8 @@ def uppercase_text(text: str) -> str:
 
 
 # Run the evaluation
-report = dataset.evaluate_sync(uppercase_text, name="1st-test-with-judge-console")
+report = dataset.evaluate_sync(uppercase_text, name="1st-test-with-judge-console-1")
+# Note that currently I cannot add metadata to the experiement though it is mentioned in this doc https://ai.pydantic.dev/evals/how-to/metrics-attributes/#experiment-level-metadata or it seems like experiment metadata is only available in .evaluate rather than .evaluate_sync
 
 # Print the results
 report.print()

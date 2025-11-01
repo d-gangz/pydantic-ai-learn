@@ -11,10 +11,13 @@ METRIC: X EXPERIMENTS PER DAY
 3. Tracing seems automatic (gotta check out a bit more)
 4. EU server instance
 5. They are SOC 2 Type II, HIPAA and GDPR compliant.
+6. Good compatibility with the Vercel AI SDK as the frontend.
+7. Logfire has javascript SDK so we can log what is happening in the frontend too. Maybe can log the feedback? (need to explore further)
 
 ## Bad
 
 1. Pydantic Logfire has not sampling LLM Judge monitoring capabilities
+2. For logfire, it doesn't show like the average metric. Probably gotta compute it ourselves via code but its ok.
 
 ## Good learnings
 
