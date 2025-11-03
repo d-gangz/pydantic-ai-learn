@@ -12,13 +12,19 @@ git branch --show-current
 
 **If on main/master:**
 
-- ⚠️ **STOP**: Never commit to main
-- Ask: "What feature/fix are you working on?"
-- Create branch: `git checkout -b {type}/{description}` (e.g., `feat/add-yaml-support`)
+🛑 **STOP IMMEDIATELY - DO NOT PROCEED WITH COMMITS**
+
+**Never commit directly to main/master under any circumstances.**
+
+Required actions:
+1. Ask user: "What feature/fix are you working on?"
+2. Create feature branch: `git checkout -b {type}/{description}` (e.g., `feat/add-yaml-support`, `docs/tracing-learnings`)
+3. Confirm branch switch: `git branch --show-current`
+4. **ONLY proceed to step 2 after confirming you are on a feature branch**
 
 **If on feature branch:**
 
-- ✅ Proceed with analysis
+✅ Proceed to step 2
 
 **Check for changes:**
 

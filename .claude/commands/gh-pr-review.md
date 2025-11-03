@@ -4,7 +4,19 @@ Perform comprehensive code review: read all changed files, analyze code quality/
 
 **Key requirement:** READ ALL CHANGED FILES and review the actual code, not just existing comments.
 
-## Workflow
+## Complete Workflow Summary
+
+1. **Fetch PR Information** - Determine which PR to review
+2. **Fetch All PR Data** - Get code changes, comments, CI status
+3. **Review Code** - Analyze code quality, security, bugs
+4. **Present Review** - Show comprehensive findings
+5. **Ask & Fix** - User decides: fix, comment, or approve
+6. **Commit & Push** - If fixes were made
+7. **Add Review Comment** - Always comment before merging (REQUIRED)
+8. **Merge PR** - Squash/merge/rebase (if approved)
+9. **Post-Merge Cleanup** - Switch to main, pull, delete branches (CRITICAL)
+
+## Detailed Workflow
 
 ### 1. Fetch PR Information
 
@@ -163,7 +175,7 @@ gh pr view $PR_NUMBER --json files -q '.files[].path'
 
 ### 5. Ask & Fix
 
-**Ask user:** "Fix all critical / Fix specific / Add comment / View only"
+**Ask user:** "Fix all critical / Fix specific / Add comment / View only / Approve & merge"
 
 **If fixing:**
 
@@ -171,7 +183,7 @@ gh pr view $PR_NUMBER --json files -q '.files[].path'
 2. Run local checks (ruff, mypy)
 3. Track what was fixed
 
-### 6. Commit & Push
+### 6. Commit & Push (if fixes were made)
 
 ```bash
 git add {files}
@@ -185,6 +197,73 @@ git push
 gh pr comment $PR_NUMBER --body "✅ Addressed review feedback
 - {fixes}
 ```
+
+### 7. Add Review Comment
+
+**Always add a review comment before merging:**
+
+```bash
+# For approved PRs
+gh pr comment $PR_NUMBER --body "$(cat <<'EOF'
+## ✅ Code Review - APPROVED
+
+[Summary of review findings]
+
+### 🌟 Highlights
+- [Key positive points]
+
+### 📊 Review Stats
+- Files reviewed: {X}
+- Code quality: [Excellent/Good/Needs improvement]
+- No blocking issues found
+
+Ready to merge! 🚀
+
+---
+🤖 Review conducted with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+
+# For PRs needing changes
+gh pr comment $PR_NUMBER --body "Review feedback provided. Please address the issues listed above."
+```
+
+### 8. Merge PR (if approved)
+
+```bash
+# Merge with squash (recommended for clean history)
+gh pr merge $PR_NUMBER --squash
+
+# Alternative: merge commit (preserves all commits)
+gh pr merge $PR_NUMBER --merge
+
+# Alternative: rebase (linear history)
+gh pr merge $PR_NUMBER --rebase
+```
+
+### 9. Post-Merge Cleanup
+
+**CRITICAL: Always perform cleanup after merging:**
+
+```bash
+# 1. Switch to main branch
+git checkout main
+
+# 2. Pull latest changes
+git pull origin main
+
+# 3. Delete local feature branch
+git branch -d {feature-branch-name}
+
+# 4. Delete remote feature branch (if not auto-deleted by GitHub)
+git push origin --delete {feature-branch-name}
+
+# Optional: Clean up remote tracking references
+git remote prune origin
+```
+
+**Note:** GitHub can auto-delete branches after merge if enabled in:
+Repository Settings → General → Pull Requests → "Automatically delete head branches"
 
 ## Output Format Examples
 
@@ -282,33 +361,59 @@ gh pr comment $PR_NUMBER --body "✅ Addressed review feedback
      Would you like to create a follow-up PR to address them?
 
 🤔 What would you like to do?
-   [User can select from options]
+   1. Create follow-up PR to fix issues
+   2. Add comment documenting known issues
+   3. No action needed
 ```
 
-### Example 2: No Issues Found
+### Example 2: Clean PR Ready to Merge
 
 ```
-🔍 Analyzing PR #45: Update documentation
-
+🔍 COMPREHENSIVE PR REVIEW: #2 - docs: add comprehensive Pydantic AI evals guide
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📊 PR Status:
   State: OPEN
-  Review: APPROVED ✅
-
-📋 Comments: 3 comments (all positive feedback)
-
-💬 Recent Comments:
-  - @reviewer1: "LGTM! Nice documentation improvements."
-  - @reviewer2: "Approved. Clear and concise."
-  - @reviewer3: "Thanks for updating this!"
+  Author: d-gangz
+  Changes: +1316 -1 across 5 files
+  Review Decision: REVIEW_REQUIRED
+  URL: https://github.com/d-gangz/pydantic-ai-learn/pull/2
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✨ No action items found!
+📂 FILES CHANGED:
+  • .claude/commands/gh-pr-review.md (+320) - New custom command
+  • agent/ai-agent.py (+3) - Added dotenv support
+  • learnings/pyai-eval-guide.md (+988) - Comprehensive guide
 
-This PR is approved and ready to merge.
-Would you like to merge it now? [Yes/No]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ No critical issues found!
+
+🟢 OPTIONAL SUGGESTIONS (2):
+  1. Consider adding .env.example file
+  2. Add troubleshooting section to guide
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 CI/CD CHECKS:
+  ⚠️  No CI/CD configured
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 REVIEW SUMMARY:
+  Total Issues Found: 0 blocking, 2 optional
+  Code quality: Excellent
+  Documentation: Outstanding
+
+  ✅ APPROVED - Ready to merge!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🤔 What would you like to do?
+   1. Add review comment and merge
+   2. Add review comment only
+   3. Merge without comment (not recommended)
 ```
 
 ## Usage
